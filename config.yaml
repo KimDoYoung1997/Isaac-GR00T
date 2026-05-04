@@ -1,0 +1,47 @@
+# GR00t / LeRobot 공용 설정 (`data:` → run_dataset_pipeline, `train:` → 학습, `inference:` → 추론 노트북)
+# 노트북에서 CONFIG_PATH 만 바꿔 다른 yaml 을 가리킬 수 있습니다.
+
+data:
+  # 프로젝트 루트: `01_download.py` 등 *.py 및 `/workspace/run_dataset_pipeline.ipynb` 기준
+  script_root: /workspace
+  dataset_base: /workspace/dataset
+  # HF Hub 에서 받을 원본 dataset repo_id
+  repo_id: learner1119/ffw_sh5_rev1_ffw_sh5_rev1_20260503_trial5_pick_up_a_red_cylinder_and_place_it_on_the_basket
+
+  skip_download: false
+  skip_convert: false
+  skip_down_dim: false
+
+  # 차원 축소 후 별도 Hub repo 로 업로드 (원본 repo_id 와 다르게)
+  push_to_hub: true
+  push_repo_id: learner1119/ffw_sh5_rev1_ffw_sh5_rev1_20260503_trial5_27dof
+  push_private: false
+
+train:
+  dataset_root: /workspace/dataset/learner1119/ffw_sh5_rev1_hand_test_edit_v30_27dof
+  dataset_repo_id: learner1119/ffw_sh5_rev1_hand_test_edit_v30_27dof
+  output_dir: /workspace/outputs/groot_ffw_sh5
+  # Hub 업로드 시 HF repo id, 미사용이면 null
+  repo_id: groot_ffw_sh5_260502
+
+  num_gpus: 1
+  batch_size: 16
+  num_steps: 500
+  save_freq: 100
+  log_freq: 100
+  job_name: groot_ffw_sh5_local
+
+  policy_chunk_size: 20
+  policy_n_action_steps: 20
+
+  resume: false
+  wandb_enable: true
+  # W&B 대시보드 프로젝트 (--wandb.project). null·빈 문자열이면 "lerobot"
+  wandb_project: groot_ffw_sh5_260502
+
+  # 필요 시만 문자열로 지정 (예: "0,1"). null 이면 환경 그대로
+  cuda_visible_devices: null
+
+inference:
+  # 체크포인트 스텝 폴더 — pretrained_model 안에 train_config.json + model.safetensors 가 있어야 함
+  checkpoint_dir: /workspace/outputs/groot_ffw_sh5/checkpoints/000400
