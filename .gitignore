@@ -119,6 +119,7 @@ playground/
 .hydra/
 
 # Data
-demo_data/gr00t-gr1-apple-to-shelf/
+demo_data/
 tmp/
 output/
+ffw_sh5_v21-checkpoints/

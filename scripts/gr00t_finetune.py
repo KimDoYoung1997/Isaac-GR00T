@@ -64,7 +64,13 @@ class ArgsConfig:
     """Number of GPUs to use for training."""
 
     save_steps: int = 1000
-    """Number of steps between saving checkpoints."""
+    """Number of optimizer steps between saving checkpoints."""
+
+    save_total_limit: int = 5
+    """Maximum number of checkpoints to keep on disk (older ones are deleted)."""
+
+    logging_steps: int = 10
+    """Log training metrics (e.g. loss) every this many steps."""
 
     # Model parameters
     base_model_path: str = "nvidia/GR00T-N1.5-3B"
@@ -107,7 +113,7 @@ class ArgsConfig:
     lora_full_model: bool = False
     """Whether to use the full model for LORA. If False, only the action head will be trained."""
 
-    dataloader_num_workers: int = 12
+    dataloader_num_workers: int = 4 # 12
     """Number of workers for data loading per GPU."""
 
     gradient_accumulation_steps: int = 1
@@ -365,13 +371,13 @@ def main(config: ArgsConfig):
         weight_decay=config.weight_decay,
         warmup_ratio=config.warmup_ratio,
         lr_scheduler_type="cosine",
-        logging_steps=10.0,
+        logging_steps=config.logging_steps,
         num_train_epochs=300,
         max_steps=config.max_steps,
         save_strategy="steps",
         save_steps=config.save_steps,
         # evaluation_strategy="no",
-        save_total_limit=5,
+        save_total_limit=config.save_total_limit,
         report_to=config.report_to,
         seed=42,
         do_eval=False,
