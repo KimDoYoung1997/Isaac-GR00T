@@ -282,7 +282,7 @@ class FfwSh5Rev127DofDataConfig(BaseDataConfig):
     action_keys = ["action.right_arm", "action.right_hand"]
     language_keys = ["annotation.human.task_description"]
     observation_indices = [0]
-    action_indices = list(range(16))
+    action_indices = list(range(10))
 
     def transform(self) -> ModalityTransform:
         transforms = [
