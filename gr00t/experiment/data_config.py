@@ -416,7 +416,7 @@ class FourierGr1FullUpperBodyDataConfig(BaseDataConfig):
     ]
     language_keys = ["annotation.human.action.task_description"]
     observation_indices = [0]
-    action_indices = list(range(16))
+    action_indices = list(range(10))
 
     def transform(self):
         transforms = [
