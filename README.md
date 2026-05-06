@@ -124,7 +124,18 @@ conda create -n gr00t python=3.10
 conda activate gr00t
 pip install --upgrade setuptools
 pip install -e .[base]
-pip install --no-build-isolation flash-attn==2.7.1.post4 
+
+# For B200/container setups where system nvcc is CUDA 13.x, install a local CUDA 12.8 nvcc
+# in the conda env and use it only for building flash-attn.
+conda install -y -c nvidia cuda-nvcc=12.8
+export CUDA_HOME="$CONDA_PREFIX"
+export PATH="$CUDA_HOME/bin:$PATH"
+export LD_LIBRARY_PATH="$CUDA_HOME/lib:$CUDA_HOME/lib64:$LD_LIBRARY_PATH"
+
+# Confirm versions match before building flash-attn.
+nvcc -V
+python -c "import torch; print(torch.__version__, torch.version.cuda)"
+pip install --no-build-isolation flash-attn==2.8.2
 ```
 
 ## Getting started with this repo

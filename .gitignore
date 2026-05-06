@@ -123,3 +123,5 @@ demo_data/
 tmp/
 output/
 ffw_sh5_v21-checkpoints/
+gr00t_onnx/
+gr00t_engine/

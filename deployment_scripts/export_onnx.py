@@ -1213,12 +1213,12 @@ def export_eagle2_llm(
     )
 
     if llm_dtype == "nvfp4":
-        print("Converting nvfp4 ONNX model to 2dq")
+        print("Converting nvfp4 ONNX model to 2dq (ModelOpt NVFP4QuantExporter)")
         import onnx
-        from modelopt.onnx.quantization.qdq_utils import fp4qdq_to_2dq
+        from modelopt.onnx.export import NVFP4QuantExporter
 
         onnx_model = onnx.load(onnx_path, load_external_data=True)
-        onnx_model = fp4qdq_to_2dq(onnx_model, verbose=True)
+        onnx_model = NVFP4QuantExporter.process_model(onnx_model)
 
         onnx.save_model(
             onnx_model,
