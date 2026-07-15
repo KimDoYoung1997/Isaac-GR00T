@@ -26,6 +26,35 @@ recordings/
 plots/
 *.npz
 
+# Fine-tuned model checkpoints and training artifacts
+*-checkpoint*/
+**/checkpoint-*/
+checkpoints/
+open_loop_eval/
+*.safetensors
+model.safetensors.index.json
+optimizer.pt
+scheduler.pt
+trainer_state.json
+training_args.bin
+rng_state.pth
+**/wandb_config.json
+**/.cache/
+**/events.out.tfevents.*
+**/lightning_logs/
+**/tensorboard/
+**/eval_plots/
+**/open_loop_eval/
+**/pretrained_model/
+**/merged_model/
+**/hub_upload_*/
+**/gr00t_hub_upload_*/
+**/model-*.safetensors
+**/model.safetensors
+**/pytorch_model.bin
+**/adapter_model.safetensors
+**/adapter_model.bin
+
 # C extensions
 *.so
 
