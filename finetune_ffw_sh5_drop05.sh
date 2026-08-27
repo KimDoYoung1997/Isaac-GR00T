@@ -12,10 +12,11 @@ EXPERIMENT_NAME="${EXPERIMENT_NAME:-ffw_sh5_n17_psc_left_drop05}"
 WANDB_PROJECT="${WANDB_PROJECT:-finetune-gr00t-n1d7-ffw-sh5-drop05}"
 
 # Same as finetune_ffw_sh5.sh, but state_dropout_prob=0.5 on GPU 3.
+# Resume from checkpoint-100000 when extending to 150k (same OUTPUT_DIR).
 export CUDA_VISIBLE_DEVICES="${CUDA_VISIBLE_DEVICES:-3}"
 export NUM_GPUS="${NUM_GPUS:-1}"
 export GLOBAL_BATCH_SIZE="${GLOBAL_BATCH_SIZE:-64}"
-export MAX_STEPS="${MAX_STEPS:-100000}"
+export MAX_STEPS="${MAX_STEPS:-150000}"
 export SAVE_STEPS="${SAVE_STEPS:-50000}"
 export DATALOADER_NUM_WORKERS="${DATALOADER_NUM_WORKERS:-4}"
 export USE_WANDB="${USE_WANDB:-1}"
@@ -48,7 +49,7 @@ if ! compgen -G "$DATASET_PATH/videos/chunk-*/*/episode_*.mp4" >/dev/null; then
 fi
 
 if [[ "${PREFLIGHT_ONLY:-0}" == "1" ]]; then
-    echo "FFW SH5 N1.7 preflight passed (state_dropout_prob=0.5, GPU 3)."
+    echo "FFW SH5 N1.7 preflight passed (state_dropout_prob=0.5, GPU 3, max_steps=150000)."
     echo "Dataset: $DATASET_PATH"
     echo "Modality config: $MODALITY_CONFIG_PATH"
     echo "Output: $OUTPUT_DIR"
