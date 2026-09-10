@@ -57,6 +57,15 @@ class FinetuneConfig:
     tune_diffusion_model: bool = True
     """If True, fine-tune the diffusion-based action decoder (if present in the model)."""
 
+    action_horizon: int = 40
+    """
+    Action chunk length. Passed to the processor as max_action_horizon, which
+    zero-pads each action sequence to this length, so it must be >= the number of
+    delta_indices in the modality config or padding gets a negative size.
+    Default matches GR00T-N1.7-3B; the position embedding holds 1024 slots, so
+    longer chunks are fine.
+    """
+
     state_dropout_prob: float = 0.2
     """
     Dropout probability applied to state inputs for regularization during training.
