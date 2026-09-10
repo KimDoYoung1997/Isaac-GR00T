@@ -57,6 +57,13 @@ class FinetuneConfig:
     tune_diffusion_model: bool = True
     """If True, fine-tune the diffusion-based action decoder (if present in the model)."""
 
+    backbone_path: str | None = None
+    """
+    Local path to the VL backbone. Defaults to the Hub id nvidia/Cosmos-Reason2-2B,
+    which is a gated repo whose 4.9GB weight file will not transfer from inside
+    this network -- point this at a local copy instead.
+    """
+
     action_horizon: int = 40
     """
     Action chunk length. Passed to the processor as max_action_horizon, which

@@ -113,6 +113,17 @@ def warn_configs(config: Config):
         )
 
 
+
+def _report_to(config):
+    """어디에 학습 지표를 보낼지. wandb 는 선택, tensorboard 는 기본 on."""
+    targets = []
+    if config.training.use_wandb:
+        targets.append("wandb")
+    if getattr(config.training, "use_tensorboard", True):
+        targets.append("tensorboard")
+    return targets or "none"
+
+
 def run(config: Config):
     warn_configs(config)
 
@@ -227,7 +238,7 @@ def run(config: Config):
         gradient_checkpointing=config.training.gradient_checkpointing,
         optim=config.training.optim,
         dataloader_num_workers=config.training.dataloader_num_workers,
-        report_to="wandb" if config.training.use_wandb else "none",
+        report_to=_report_to(config),
         seed=config.data.seed,
         deepspeed=deepspeed_config,
         ddp_find_unused_parameters=False,
