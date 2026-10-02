@@ -16,11 +16,26 @@ Usage mirrors the upstream script:
 """
 
 import logging
+from pathlib import Path
 
 import tyro
 
 from gr00t.eval import open_loop_eval
 
 logging.basicConfig(level=logging.INFO, force=True)
+
+# Upstream saves every trajectory's plot to the same --save_plot_path, so a
+# multi-trajectory run leaves only the last one. Suffix the trajectory id:
+# plot.jpeg -> plot_traj0.jpeg, plot_traj1.jpeg, ...
+_plot = open_loop_eval.plot_trajectory_results
+
+
+def _plot_per_traj(*args, traj_id, save_plot_path, **kwargs):
+    path = Path(save_plot_path)
+    path = path.with_name(f"{path.stem}_traj{traj_id}{path.suffix}")
+    return _plot(*args, traj_id=traj_id, save_plot_path=str(path), **kwargs)
+
+
+open_loop_eval.plot_trajectory_results = _plot_per_traj
 
 open_loop_eval.main(tyro.cli(open_loop_eval.ArgsConfig))
