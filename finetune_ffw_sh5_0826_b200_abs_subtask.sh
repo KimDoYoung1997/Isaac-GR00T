@@ -2,9 +2,13 @@
 
 set -euo pipefail
 
-# Fine-tune GR00T-N1.7-3B on the FFW-SH5 0826 merge — 4x B200, 26-dim action,
-# chunk 40. The mirror of RLDX-1's rldx1_ft_ffw_sh5_0826 run: identical
-# train/holdout split, so held-out scores compare directly.
+# Fine-tune GR00T-N1.7-3B on the FFW-SH5 0826 merge with SUBTASK-level
+# language conditioning, on the all-ABSOLUTE representation (the original
+# baseline action space). Identical to the ABS baseline run except the dataset:
+# the _subtask copy stamps a per-frame task_index (1=bring / 2=flip / 3=push,
+# human segment labels in meta/subtask_labels.jsonl) and the loader resolves
+# task_index per frame — a pure data change, zero training-code change.
+# Score against dataset/rlwrld_demo_0826_holdout_subtask (oracle sequencer).
 #
 #   data      dataset/rlwrld_demo_0826_train    72 ep / 29,661 frames
 #             (held-out 9 ep in dataset/rlwrld_demo_0826_holdout — same
@@ -29,7 +33,7 @@ export UV_PYTHON_INSTALL_DIR="/NHNHOME/doyoung/.uv/python"
 export UV_CACHE_DIR="/NHNHOME/doyoung/.cache/uv"
 
 BASE_MODEL_PATH="${BASE_MODEL_PATH:-nvidia/GR00T-N1.7-3B}"
-DATASET_PATH="${DATASET_PATH:-$REPO_DIR/dataset/rlwrld_demo_0826_train}"
+DATASET_PATH="${DATASET_PATH:-$REPO_DIR/dataset/rlwrld_demo_0826_train_subtask}"
 MODALITY_CONFIG_PATH="${MODALITY_CONFIG_PATH:-$REPO_DIR/examples/FFW_SH5/ffw_sh5_0826_used26_h40_config.py}"
 
 export NUM_GPUS="${NUM_GPUS:-4}"
@@ -43,7 +47,7 @@ export MASTER_PORT="${MASTER_PORT:-$(shuf -i 20000-30000 -n 1)}"
 SAVE_TOTAL_LIMIT="${SAVE_TOTAL_LIMIT:-10}"
 STATE_DROPOUT_PROB="${STATE_DROPOUT_PROB:-0.2}"
 
-CKPT_NAME="${CKPT_NAME:-gr00t_n17_ffw_sh5_0826_b200}"
+CKPT_NAME="${CKPT_NAME:-gr00t_n17_ffw_sh5_0826_b200_abs_subtask}"
 
 # SMOKE=1 proves the pipeline assembles (stats generation, loader keys,
 # 26-dim action, VRAM) without touching the real run's output directory —
